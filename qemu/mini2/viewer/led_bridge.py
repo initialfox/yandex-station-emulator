@@ -3,13 +3,14 @@
 from __future__ import annotations
 
 import json
+import os
 import sys
 import time
 import urllib.error
 import urllib.request
 from pathlib import Path
 
-VIEWER = "http://127.0.0.1:8765/api/event"
+VIEWER = os.environ.get('ALICE_VIEWER_URL', "http://127.0.0.1:8765/api/event")
 POLL = 0.2
 MIN_POST_INTERVAL = 0.5  # ≤2 Hz — иначе валит HTTP-сервер
 

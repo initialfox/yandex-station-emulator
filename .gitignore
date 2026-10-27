@@ -2,6 +2,9 @@
 __pycache__/
 *.pyc
 .venv/
+qemu/mini2/alpine_root-linux/
+qemu/mini2/led_sysfs-linux/
+qemu/mini2/run-linux/
 build/
 qemu/mini2/run/
 qemu/mini2/led_sysfs/

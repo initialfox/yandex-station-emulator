@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import os
 import re
 import sys
 import time
@@ -11,7 +12,7 @@ import urllib.request
 from pathlib import Path
 
 ANSI = re.compile(r"\x1b\[[0-9;?]*[ -/]*[@-~]")
-VIEWER = "http://127.0.0.1:8765/api/event"
+VIEWER = os.environ.get('ALICE_VIEWER_URL', "http://127.0.0.1:8765/api/event")
 FLUSH_EVERY = 0.12
 MAX_CHUNK = 1800
 

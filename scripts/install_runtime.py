@@ -3,6 +3,7 @@
 import argparse
 import hashlib
 import io
+import inspect
 import json
 import os
 from pathlib import Path, PurePosixPath
@@ -43,7 +44,8 @@ with io.BufferedReader(Parts(paths)) as stream:
             path=PurePosixPath(member.name)
             if path.is_absolute() or '..' in path.parts or path.parts[0] not in ('qemu','firmware'):raise SystemExit('Unsafe archive path')
             # Absolute symlinks are intentional inside the chroot bootstrap.
-            archive.extract(member,target,filter='fully_trusted')
+            options = {'filter': 'fully_trusted'} if 'filter' in inspect.signature(archive.extract).parameters else {}
+            archive.extract(member, target, **options)
 (target/'qemu/mini2/run').mkdir(exist_ok=True)
 (target/'qemu/mini2/led_sysfs').mkdir(exist_ok=True)
 print('Runtime installed:',disk)

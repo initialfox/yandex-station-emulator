@@ -68,7 +68,15 @@ ip link set wlan0 up
 if [ "$(cat /opt/mini2/network_mode 2>/dev/null)" = lan ]; then
     ip link set "$control_if" up
     ip addr add 10.0.2.15/24 dev "$control_if"
-    udhcpc -i wlan0 -q -n -t 5 -s /opt/mini2/lan-dhcp.sh
+    # Preserve loopback host forwards when the LAN supplies a default route.
+    ip route add 10.0.2.0/24 dev "$control_if" src 10.0.2.15 table 128
+    ip route add default via 10.0.2.2 dev "$control_if" table 128
+    ip rule add from 10.0.2.15/32 table 128
+    # Root management stays on the private control transport.
+    for port in 22 5555 8099 15558; do
+        iptables -I INPUT -i wlan0 -p tcp --dport "$port" -j DROP
+    done
+    udhcpc -i wlan0 -b -t 5 -s /opt/mini2/lan-dhcp.sh
 else
     ip addr add 10.0.2.15/24 dev wlan0
     ip route add default via 10.0.2.2
